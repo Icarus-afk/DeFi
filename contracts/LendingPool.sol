@@ -1,110 +1,101 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
+import "./ERC20Token.sol";
 import "./InterestRateModel.sol";
 import "./CollateralManager.sol";
 import "./LiquidationManager.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract LendingPool is ReentrancyGuard {
-    address public underlyingAsset; // Address of the deposited asset (ETH or ERC-20 token)
+contract LendingPool {
+    ERC20Token public assetToken;
     InterestRateModel public interestRateModel;
     CollateralManager public collateralManager;
     LiquidationManager public liquidationManager;
 
-    // Mapping of user addresses to their deposited asset amount
-    mapping(address => uint) public deposits;
-    mapping(address => uint) public borrowAmounts;
-    // Total amount of assets deposited in the pool
-    uint public totalDeposits;
-
-    // Total amount of assets borrowed from the pool
-    uint public totalBorrows;
+    mapping(address => uint256) public borrowerDebt; // borrower address => total borrowed amount
+    mapping(address => uint256) public lenderBalance; // lender address => total deposited amount
 
     constructor(
-        address _underlyingAsset,
-        address _interestRateModel,
-        address _collateralManager,
-        address _liquidationManager
+        ERC20Token _assetToken,
+        InterestRateModel _interestRateModel,
+        CollateralManager _collateralManager,
+        LiquidationManager _liquidationManager
     ) {
-        underlyingAsset = _underlyingAsset;
-        interestRateModel = InterestRateModel(_interestRateModel);
-        collateralManager = CollateralManager(_collateralManager);
-        liquidationManager = LiquidationManager(_liquidationManager);
+        assetToken = _assetToken;
+        interestRateModel = _interestRateModel;
+        collateralManager = _collateralManager;
+        liquidationManager = _liquidationManager;
     }
 
-    // Function to deposit assets into the pool (with ReentrancyGuard)
-    function deposit(uint amount) public nonReentrant {
-        IERC20(underlyingAsset).transferFrom(msg.sender, address(this), amount);
-        deposits[msg.sender] += amount;
-        totalDeposits += amount;
+    function deposit(uint256 amount) external {
+        assetToken.transferFrom(msg.sender, address(this), amount);
+        lenderBalance[msg.sender] += amount;
     }
 
-    // Function to withdraw deposited assets
-    function withdraw(uint amount) public {
-        require(deposits[msg.sender] >= amount, "Insufficient balance");
-        IERC20(underlyingAsset).transfer(msg.sender, amount);
-        deposits[msg.sender] -= amount;
-        totalDeposits -= amount;
+    function withdraw(uint256 amount) external {
+        require(lenderBalance[msg.sender] >= amount, "Insufficient balance");
+        lenderBalance[msg.sender] -= amount;
+        assetToken.transfer(msg.sender, amount);
     }
 
-    // Function to borrow assets by providing collateral
-    function borrow(uint amount) public {
-        // Check if the borrower is overcollateralized
-        require(
-            collateralManager.canBorrow(msg.sender, amount),
-            "Insufficient collateral"
-        );
+    function borrow(uint256 amount) external {
+        uint256 borrowRate = interestRateModel.getBorrowRate(getUtilizationRate());
+        uint256 interest = (amount * borrowRate) / 1e4;
+        uint256 totalAmount = amount + interest;
 
-        // Update accounting (totalBorrows, etc.)
-        totalBorrows += amount;
+        require(collateralManager.isCollateralSufficient(msg.sender, address(assetToken)), "Insufficient collateral");
 
-        // Transfer borrowed assets to the borrower
-        IERC20(underlyingAsset).transfer(msg.sender, amount);
+        // Ensure lender has enough balance
+        require(lenderBalance[address(this)] >= totalAmount, "Not enough liquidity");
 
-        // Update collateral in the CollateralManager
-        collateralManager.updateCollateral(msg.sender, amount);
+        // Transfer borrowed amount to borrower
+        assetToken.transfer(msg.sender, amount);
+
+        // Update borrower's debt
+        borrowerDebt[msg.sender] += totalAmount;
     }
 
-    // Function to repay borrowed assets
-    function repay(uint amount) public {
-        // Transfer the repayment amount from the user to the contract
-        IERC20(underlyingAsset).transferFrom(msg.sender, address(this), amount);
+    function repay(uint256 amount) external {
+        require(borrowerDebt[msg.sender] >= amount, "Amount exceeds debt");
 
-        // Update the user's borrow amount in the CollateralManager
-        collateralManager.updateBorrowAmount(msg.sender, -int(amount));
+        // Transfer repaid amount from borrower to contract
+        assetToken.transferFrom(msg.sender, address(this), amount);
 
-        // Update the total borrows in the LendingPool
-        totalBorrows -= amount;
+        // Update borrower's debt
+        borrowerDebt[msg.sender] -= amount;
     }
 
-    // Function to calculate the current interest rate
-    function getInterestRate() public view returns (uint) {
-        return interestRateModel.getInterestRate(totalBorrows, totalDeposits);
+    function liquidate(address borrower) external {
+        require(!collateralManager.isCollateralSufficient(borrower, address(assetToken)), "Borrower is not undercollateralized");
+
+        uint256 borrowedAmount = borrowerDebt[borrower];
+        uint256 liquidationBonus = liquidationManager.liquidationBonus();
+        uint256 liquidationAmount = (borrowedAmount * (1e4 + liquidationBonus)) / 1e4;
+
+        // Transfer collateral tokens to liquidator
+        assetToken.transfer(msg.sender, liquidationAmount);
+
+        // Transfer borrowed tokens from liquidator to borrower
+        assetToken.transferFrom(msg.sender, borrower, borrowedAmount);
+
+        // Reset borrower's debt
+        borrowerDebt[borrower] = 0;
     }
 
-    // Function to accrue interest (logic not implemented for brevity)
-    function accrueInterest() public {
-        // Implement logic to calculate accrued interest based on interest rate and time
-        // Update totalBorrows and deposits accordingly
+    function calculateBorrowRate(uint256 utilizationRate) external view returns (uint256) {
+        return interestRateModel.getBorrowRate(utilizationRate);
     }
 
-    function getUserBorrows(address borrower) public view returns (uint) {
-        // Return the borrower's borrow amount from the borrowAmounts mapping
-        return borrowAmounts[borrower];
+    function getUtilizationRate() public view returns (uint256) {
+        return (totalBorrowed() * 1e4) / totalSupplied();
     }
 
-    // Simplified Liquidation Function (for demonstration purposes only)
-    function liquidate(address borrower) public {
-        // Check if borrower is undercollateralized with CollateralManager
-        if (collateralManager.isUndercollateralized(borrower)) {
-            // Seize a portion of the borrower's collateral (simplified logic)
-            uint seizureRatio = 50; // Example seizure ratio of 50%
-            uint seizedAmount = collateralManager.seizeCollateral(borrower, seizureRatio);
-            // Sell seized collateral using external oracle or price feed (not implemented)
-            // ... sell seized collateral and get liquidation proceeds ...
-            // Transfer liquidation proceeds to the liquidator with a bonus (not implemented)
-            liquidationManager.handleLiquidation(borrower, seizedAmount); // Call LiquidationManager for further actions
-        }
+    function totalSupplied() public view returns (uint256) {
+        return assetToken.balanceOf(address(this));
+    }
+
+    function totalBorrowed() public view returns (uint256) {
+        return totalSupplied() - assetToken.balanceOf(address(this));
     }
 }

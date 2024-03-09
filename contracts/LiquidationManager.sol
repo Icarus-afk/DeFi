@@ -1,31 +1,37 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./LendingPool.sol";
 
 contract LiquidationManager {
+    address public owner;
+    uint256 public liquidationBonus; // Liquidation bonus percentage (in basis points)
 
-  // Address of the LendingPool contract
-  address public lendingPool;
+    constructor(uint256 _liquidationBonus) {
+        owner = msg.sender;
+        liquidationBonus = _liquidationBonus;
+    }
 
-  // Liquidation bonus percentage awarded to liquidators (e.g., 5%)
-  uint public liquidationBonus;
+    function setLiquidationBonus(uint256 _liquidationBonus) external {
+        require(msg.sender == owner, "Only owner can set liquidation bonus");
+        liquidationBonus = _liquidationBonus;
+    }
 
-  constructor(address _lendingPool, uint _liquidationBonus) {
-    lendingPool = _lendingPool;
-    liquidationBonus = _liquidationBonus;
-  }
+    function liquidatePosition(address borrower, address collateralToken, address borrowedToken, uint256 borrowedAmount) external {
+        // TODO: Implement liquidation logic
+        // For now, we'll assume liquidation is successful and transfer assets accordingly
 
-  // Function called by LendingPool during liquidation
-  function handleLiquidation(address borrower, uint seizedAmount) public {
-    // Sell seized collateral using an external oracle or AMM (not implemented)
-    // ... sell seized collateral and get liquidation proceeds ...
-    // Calculate liquidation bonus and remaining proceeds
-    uint bonus = seizedAmount * liquidationBonus / 100;
-    uint remainingProceeds = seizedAmount - bonus;
-    // Pay seized collateral proceeds (minus bonus) to the borrower's debt in LendingPool
-    IERC20(LendingPool(lendingPool).underlyingAsset()).transfer(lendingPool, remainingProceeds);
-    // Transfer liquidation bonus to the liquidator
-    IERC20(LendingPool(lendingPool).underlyingAsset()).transfer(msg.sender, bonus);
-  }
+        // Calculate liquidation amount
+        uint256 liquidationAmount = borrowedAmount * (1e4 + liquidationBonus) / 1e4;
+
+        // Transfer collateral tokens to liquidator
+        IERC20(collateralToken).transfer(msg.sender, liquidationAmount);
+
+        // Transfer borrowed tokens from liquidator to borrower
+        IERC20(borrowedToken).transferFrom(msg.sender, borrower, borrowedAmount);
+
+        // Reset borrower's position
+        // For simplicity, we'll set collateral and borrowed amounts to zero
+        // In a real implementation, you'd likely update the borrower's position in CollateralManager.sol
+    }
 }

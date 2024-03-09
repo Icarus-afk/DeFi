@@ -1,36 +1,31 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract InterestRateModel {
+    uint256 public baseRatePerYear; // Base interest rate per year (in basis points)
+    uint256 public multiplierPerYear; // Multiplier per year (in basis points)
+    uint256 public jumpMultiplierPerYear; // Jump multiplier per year (in basis points)
+    uint256 public kink; // Utilization ratio at which the jump multiplier is applied (in basis points)
 
-  // Base interest rate (e.g., annual percentage yield)
-  uint public baseRate;
-
-  // Slope of the interest rate curve (determines how quickly rate increases with utilization)
-  uint public slope;
-
-  // Maximum borrow rate (e.g., a cap to prevent excessive borrowing)
-  uint public maxRate;
-
-  // Borrowing utilization ratio (total borrows / total deposits)
-  function getUtilizationRatio(uint totalBorrows, uint totalDeposits) public view returns (uint) {
-    if (totalDeposits == 0) return 0;
-    return totalBorrows * 1e18 / totalDeposits; // Utilize 1e18 for fixed-point math
-  }
-
-  // Function to calculate the interest rate based on utilization ratio
-  function getInterestRate(uint totalBorrows, uint totalDeposits) public view returns (uint) {
-    uint utilizationRatio = getUtilizationRatio(totalBorrows, totalDeposits);
-    uint interestRate = baseRate + utilizationRatio * slope;
-    if (interestRate > maxRate) {
-      interestRate = maxRate;
+    constructor(
+        uint256 _baseRatePerYear,
+        uint256 _multiplierPerYear,
+        uint256 _jumpMultiplierPerYear,
+        uint256 _kink
+    ) {
+        baseRatePerYear = _baseRatePerYear;
+        multiplierPerYear = _multiplierPerYear;
+        jumpMultiplierPerYear = _jumpMultiplierPerYear;
+        kink = _kink;
     }
-    return interestRate;
-  }
 
-  // Constructor to set initial parameters (baseRate, slope, maxRate)
-  constructor(uint _baseRate, uint _slope, uint _maxRate) {
-    baseRate = _baseRate;
-    slope = _slope;
-    maxRate = _maxRate;
-  }
+    function getBorrowRate(uint256 utilizationRate) external view returns (uint256) {
+        if (utilizationRate < kink) {
+            return baseRatePerYear + utilizationRate * multiplierPerYear / 1e4;
+        } else {
+            uint256 normalRate = baseRatePerYear + kink * multiplierPerYear / 1e4;
+            uint256 excessUtilizationRate = utilizationRate - kink;
+            return normalRate + excessUtilizationRate * jumpMultiplierPerYear / 1e4;
+        }
+    }
 }
