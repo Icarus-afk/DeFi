@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.13;
 
 contract InterestRateModel {
     uint256 public baseRatePerYear; // Base interest rate per year (in basis points)
@@ -19,7 +19,7 @@ contract InterestRateModel {
         kink = _kink;
     }
 
-    function getBorrowRate(uint256 utilizationRate) external view returns (uint256) {
+    function getBorrowRate(uint256 utilizationRate) external view returns (uint256) { 
         if (utilizationRate < kink) {
             return baseRatePerYear + utilizationRate * multiplierPerYear / 1e4;
         } else {

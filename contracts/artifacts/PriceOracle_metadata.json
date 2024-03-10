@@ -1,0 +1,102 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "assetToAggregator",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "asset",
+						"type": "address"
+					}
+				],
+				"name": "getPrice",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "asset",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "aggregator",
+						"type": "address"
+					}
+				],
+				"name": "setAggregator",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/PriceOracle.sol": "PriceOracle"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/PriceOracle.sol": {
+			"keccak256": "0x7487dda07836dc9f6cfd41bbd7272715cd59702ce707cf2c6d5bc9284161865f",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://18344a60a5161884c96d9c22c4215a473904f93af80cd0e0491b1d2060922be3",
+				"dweb:/ipfs/QmQqUE52X1qJnn6Uw8W24ALboFia1X5HPAtGNvsHotfdRv"
+			]
+		}
+	},
+	"version": 1
+}

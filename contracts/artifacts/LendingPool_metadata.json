@@ -1,0 +1,357 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "contract ERC20Token",
+						"name": "_assetToken",
+						"type": "address"
+					},
+					{
+						"internalType": "contract InterestRateModel",
+						"name": "_interestRateModel",
+						"type": "address"
+					},
+					{
+						"internalType": "contract CollateralManager",
+						"name": "_collateralManager",
+						"type": "address"
+					},
+					{
+						"internalType": "contract LiquidationManager",
+						"name": "_liquidationManager",
+						"type": "address"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "assetToken",
+				"outputs": [
+					{
+						"internalType": "contract ERC20Token",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "borrow",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "borrowerDebt",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "utilizationRate",
+						"type": "uint256"
+					}
+				],
+				"name": "calculateBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "collateralManager",
+				"outputs": [
+					{
+						"internalType": "contract CollateralManager",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "deposit",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getUtilizationRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "interestRateModel",
+				"outputs": [
+					{
+						"internalType": "contract InterestRateModel",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "lenderBalance",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					}
+				],
+				"name": "liquidate",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationManager",
+				"outputs": [
+					{
+						"internalType": "contract LiquidationManager",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "repay",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalBorrowed",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "totalSupplied",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					}
+				],
+				"name": "withdraw",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/LendingPool.sol": "LendingPool"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/interfaces/draft-IERC6093.sol": {
+			"keccak256": "0x60c65f701957fdd6faea1acb0bb45825791d473693ed9ecb34726fdfaa849dd7",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://ea290300e0efc4d901244949dc4d877fd46e6c5e43dc2b26620e8efab3ab803f",
+				"dweb:/ipfs/QmcLLJppxKeJWqHxE2CUkcfhuRTgHSn8J4kijcLa5MYhSt"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/ERC20.sol": {
+			"keccak256": "0xc3e1fa9d1987f8d349dfb4d6fe93bf2ca014b52ba335cfac30bfe71e357e6f80",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://c5703ccdeb7b1d685e375ed719117e9edf2ab4bc544f24f23b0d50ec82257229",
+				"dweb:/ipfs/QmTdwkbQq7owpCiyuzE7eh5LrD2ddrBCZ5WHVsWPi1RrTS"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c",
+				"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
+			]
+		},
+		"@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol": {
+			"keccak256": "0xaa761817f6cd7892fcf158b3c776b34551cde36f48ff9703d53898bc45a94ea2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0ad7c8d4d08938c8dfc43d75a148863fb324b80cf53e0a36f7e5a4ac29008850",
+				"dweb:/ipfs/QmcrhfPgVNf5mkdhQvy1pMv51TFokD3Y4Wa5WZhFqVh8UV"
+			]
+		},
+		"@openzeppelin/contracts/utils/Context.sol": {
+			"keccak256": "0x493033a8d1b176a037b2cc6a04dad01a5c157722049bbecf632ca876224dd4b2",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6a708e8a5bdb1011c2c381c9a5cfd8a9a956d7d0a9dc1bd8bcdaf52f76ef2f12",
+				"dweb:/ipfs/Qmax9WHBnVsZP46ZxEMNRQpLQnrdE4dK8LehML1Py8FowF"
+			]
+		},
+		"contracts/CollateralManager.sol": {
+			"keccak256": "0x4946827fb2440aca0044c1f0752a746fa56ddc06282f1e3e15117cdcaed21562",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://6d9945aa38d760e94afcb650a7104303f131dc10c64909c6c06cebb8d7b8a143",
+				"dweb:/ipfs/QmZthJ1ToZa326eWJjzVHDbwroSxLeKs3CMEGaf5g7MYqj"
+			]
+		},
+		"contracts/ERC20Token.sol": {
+			"keccak256": "0x8a4c5bca20ba625dedb6a73c9a578412c389ff698aaced801d69937cf877fe46",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://a16f492aa500676cf065b4c8d073298385dafbd6783998e180a2d4b96118789d",
+				"dweb:/ipfs/QmQeaXvieanA5MvvGHRS7iaS6sTCF4w1MaKFf1TcHXRWQX"
+			]
+		},
+		"contracts/InterestRateModel.sol": {
+			"keccak256": "0x070b8bfa966a7f500ebbb293aea2adc3bff3d9910146adb8c5a94a43fe309ee1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0c6fa1655e75b595575aed2ff25be42872b297193aa6e6b0280652ebac71643b",
+				"dweb:/ipfs/QmaNMPUosVacqk2fn7GqLnpLTJ999urADsTdCGQFYaNr3P"
+			]
+		},
+		"contracts/LendingPool.sol": {
+			"keccak256": "0x0c17777aa45874648d53fc2327f8fe16a42bf55a7306477b68d7e29b2fd595bc",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://4879b26d5dad316c763ae62ac7f4c41ad5b02de2e7318c276ab8afffd3f825cd",
+				"dweb:/ipfs/QmbXE9w5Sf74tV5jPq3zeekU55baLm519rZhZ7AmuZpRMg"
+			]
+		},
+		"contracts/LiquidationManager.sol": {
+			"keccak256": "0x86d84f1f27a0d3a8184aa56524ab227835bf7be95e1189fdc72f136be6a10532",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5bff4174d09bd3cc6dc507e0d4c90a19754a2481b16fc937049cd7d11cda902f",
+				"dweb:/ipfs/QmRxWSUDQRb6TWNXdfFHcb57BJ1FRigoZjPdx5WvW1cb4i"
+			]
+		}
+	},
+	"version": 1
+}

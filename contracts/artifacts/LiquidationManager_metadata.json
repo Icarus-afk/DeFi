@@ -1,0 +1,132 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_liquidationBonus",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "borrower",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "collateralToken",
+						"type": "address"
+					},
+					{
+						"internalType": "address",
+						"name": "borrowedToken",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "borrowedAmount",
+						"type": "uint256"
+					}
+				],
+				"name": "liquidatePosition",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "liquidationBonus",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "owner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_liquidationBonus",
+						"type": "uint256"
+					}
+				],
+				"name": "setLiquidationBonus",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/LiquidationManager.sol": "LiquidationManager"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"@openzeppelin/contracts/token/ERC20/IERC20.sol": {
+			"keccak256": "0xc6a8ff0ea489379b61faa647490411b80102578440ab9d84e9a957cc12164e70",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0ea104e577e63faea3b69c415637e99e755dcbf64c5833d7140c35a714d6d90c",
+				"dweb:/ipfs/Qmau6x4Ns9XdyynRCNNp3RhLqijJjFm7z5fyZazfYFGYdq"
+			]
+		},
+		"contracts/LiquidationManager.sol": {
+			"keccak256": "0x86d84f1f27a0d3a8184aa56524ab227835bf7be95e1189fdc72f136be6a10532",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://5bff4174d09bd3cc6dc507e0d4c90a19754a2481b16fc937049cd7d11cda902f",
+				"dweb:/ipfs/QmRxWSUDQRb6TWNXdfFHcb57BJ1FRigoZjPdx5WvW1cb4i"
+			]
+		}
+	},
+	"version": 1
+}

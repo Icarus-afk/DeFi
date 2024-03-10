@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.13;
 
 // Interface for interacting with a decentralized oracle provider
 interface AggregatorV3Interface {

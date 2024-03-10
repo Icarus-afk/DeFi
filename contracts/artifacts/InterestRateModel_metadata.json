@@ -1,0 +1,143 @@
+{
+	"compiler": {
+		"version": "0.8.22+commit.4fc1097e"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_baseRatePerYear",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_multiplierPerYear",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_jumpMultiplierPerYear",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_kink",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
+				"inputs": [],
+				"name": "baseRatePerYear",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "utilizationRate",
+						"type": "uint256"
+					}
+				],
+				"name": "getBorrowRate",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "jumpMultiplierPerYear",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "kink",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "multiplierPerYear",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			}
+		],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/InterestRateModel.sol": "InterestRateModel"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/InterestRateModel.sol": {
+			"keccak256": "0x070b8bfa966a7f500ebbb293aea2adc3bff3d9910146adb8c5a94a43fe309ee1",
+			"license": "MIT",
+			"urls": [
+				"bzz-raw://0c6fa1655e75b595575aed2ff25be42872b297193aa6e6b0280652ebac71643b",
+				"dweb:/ipfs/QmaNMPUosVacqk2fn7GqLnpLTJ999urADsTdCGQFYaNr3P"
+			]
+		}
+	},
+	"version": 1
+}

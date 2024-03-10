@@ -1,24 +1,30 @@
 module.exports = {
   networks: {
     ganache: {
-      host: "127.0.0.1", // Replace with Ganache host if different
+      host: "127.0.0.1",
+      port: 8545,
+      network_id: "*",
+      gas: 6721975,
+      gasPrice: 20000000000,
+      accounts: ["0x62edf306d0ca7a729f885e47133c459908d2309183cb2abf4677d187d9e86c5b"]
+    },
+    loc_defi_defi: {
+      host: "127.0.0.1",
       port: 7545,
-      network_id: 5777, // Ganache default network ID
-      gas: 5000, // Gas limit for deployment (adjust as needed)
-      gasPrice: 20000000000, // Gas price (adjust as needed)
-      accounts: [
-        "0xa800662caafd43f843cf55c3e44be312a73a5a3748b5a765fb5f3a78fc867a05" // Replace with Ganache account private key
-      ]
+      network_id: "*",
+      gas: 6721975,
+      gasPrice: 20000000000,
+      accounts: ["0xf84e2bee97b8529b780af0837a53eb6e370eb71223ead09a440dccf99655df6f"]
     }
   },
   compilers: {
     solc: {
-      version: '0.8.20',
+      version: '0.8.13',
       settings: {
         optimizer: {
-          enabled: false, // Default: false
-          runs: 200      // Default: 200
-        },
+          enabled: true,
+          runs: 200
+        }
       }
     }
   }

@@ -1,57 +1,88 @@
 // SPDX-License-Identifier: MIT
-// OpenZeppelin Contracts (last updated v5.0.0) (proxy/beacon/BeaconProxy.sol)
 
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.0;
 
-import {IBeacon} from "./IBeacon.sol";
-import {Proxy} from "../Proxy.sol";
-import {ERC1967Utils} from "../ERC1967/ERC1967Utils.sol";
+import "./IBeacon.sol";
+import "../Proxy.sol";
+import "../../utils/Address.sol";
 
 /**
- * @dev This contract implements a proxy that gets the implementation address for each call from an {UpgradeableBeacon}.
+ * @dev This contract implements a proxy that gets the implementation address for each call from a {UpgradeableBeacon}.
  *
- * The beacon address can only be set once during construction, and cannot be changed afterwards. It is stored in an
- * immutable variable to avoid unnecessary storage reads, and also in the beacon storage slot specified by
- * https://eips.ethereum.org/EIPS/eip-1967[EIP1967] so that it can be accessed externally.
+ * The beacon address is stored in storage slot `uint256(keccak256('eip1967.proxy.beacon')) - 1`, so that it doesn't
+ * conflict with the storage layout of the implementation behind the proxy.
  *
- * CAUTION: Since the beacon address can never be changed, you must ensure that you either control the beacon, or trust
- * the beacon to not upgrade the implementation maliciously.
- *
- * IMPORTANT: Do not use the implementation logic to modify the beacon storage slot. Doing so would leave the proxy in
- * an inconsistent state where the beacon storage slot does not match the beacon address.
+ * _Available since v3.4._
  */
 contract BeaconProxy is Proxy {
-    // An immutable address for the beacon to avoid unnecessary SLOADs before each delegate call.
-    address private immutable _beacon;
+    /**
+     * @dev The storage slot of the UpgradeableBeacon contract which defines the implementation for this proxy.
+     * This is bytes32(uint256(keccak256('eip1967.proxy.beacon')) - 1)) and is validated in the constructor.
+     */
+    bytes32 private constant _BEACON_SLOT = 0xa3f0ad74e5423aebfd80d3ef4346578335a9a72aeaee59ff6cb3582b35133d50;
 
     /**
      * @dev Initializes the proxy with `beacon`.
      *
      * If `data` is nonempty, it's used as data in a delegate call to the implementation returned by the beacon. This
-     * will typically be an encoded function call, and allows initializing the storage of the proxy like a Solidity
+     * will typically be an encoded function call, and allows initializating the storage of the proxy like a Solidity
      * constructor.
      *
      * Requirements:
      *
      * - `beacon` must be a contract with the interface {IBeacon}.
-     * - If `data` is empty, `msg.value` must be zero.
      */
     constructor(address beacon, bytes memory data) payable {
-        ERC1967Utils.upgradeBeaconToAndCall(beacon, data);
-        _beacon = beacon;
+        assert(_BEACON_SLOT == bytes32(uint256(keccak256("eip1967.proxy.beacon")) - 1));
+        _setBeacon(beacon, data);
+    }
+
+    /**
+     * @dev Returns the current beacon address.
+     */
+    function _beacon() internal view virtual returns (address beacon) {
+        bytes32 slot = _BEACON_SLOT;
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            beacon := sload(slot)
+        }
     }
 
     /**
      * @dev Returns the current implementation address of the associated beacon.
      */
     function _implementation() internal view virtual override returns (address) {
-        return IBeacon(_getBeacon()).implementation();
+        return IBeacon(_beacon()).implementation();
     }
 
     /**
-     * @dev Returns the beacon.
+     * @dev Changes the proxy to use a new beacon.
+     *
+     * If `data` is nonempty, it's used as data in a delegate call to the implementation returned by the beacon.
+     *
+     * Requirements:
+     *
+     * - `beacon` must be a contract.
+     * - The implementation returned by `beacon` must be a contract.
      */
-    function _getBeacon() internal view virtual returns (address) {
-        return _beacon;
+    function _setBeacon(address beacon, bytes memory data) internal virtual {
+        require(
+            Address.isContract(beacon),
+            "BeaconProxy: beacon is not a contract"
+        );
+        require(
+            Address.isContract(IBeacon(beacon).implementation()),
+            "BeaconProxy: beacon implementation is not a contract"
+        );
+        bytes32 slot = _BEACON_SLOT;
+
+        // solhint-disable-next-line no-inline-assembly
+        assembly {
+            sstore(slot, beacon)
+        }
+
+        if (data.length > 0) {
+            Address.functionDelegateCall(_implementation(), data, "BeaconProxy: function call failed");
+        }
     }
 }
